@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Eflatun.SceneReference;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -11,12 +12,19 @@ public class WorldBehaviour : MonoBehaviour
     [SerializeField] private GameObject menuDisplayObject;
     [SerializeField] private GameObject inventoryDisplayObject;
 
-    [Range(1f, 100f)]
+    [Range(1f, 1000f)]
     [SerializeField] private float movementSpeed = 5f;
     [SerializeField] private Rigidbody2D playerRigidbody;
 
+    [SerializeField] private GameObject followCamera;
+
+    [SerializeField] private List<Transform> cameraBounds = new();
+
     private Vector2 movementInput = Vector2.zero;
     private float initialTimeScale = 1f;
+
+    private Vector2 minCameraBounds;
+    private Vector2 maxCameraBounds;
 
     private bool IsInventoryActive => inventoryDisplayObject.activeSelf;
     private bool IsPauseMenuActive => menuDisplayObject.activeSelf;
@@ -38,11 +46,31 @@ public class WorldBehaviour : MonoBehaviour
     {
         menuDisplayObject.SetActive(false);
         inventoryDisplayObject.SetActive(false);
+
+        minCameraBounds = Vector2.positiveInfinity;
+        maxCameraBounds = Vector2.negativeInfinity;
+
+        foreach (var bound in cameraBounds)
+        {
+            minCameraBounds.x = Mathf.Min(minCameraBounds.x, bound.position.x);
+            minCameraBounds.y = Mathf.Min(minCameraBounds.y, bound.position.y);
+
+            maxCameraBounds.x = Mathf.Max(maxCameraBounds.x, bound.position.x);
+            maxCameraBounds.y = Mathf.Max(maxCameraBounds.y, bound.position.y);
+        }
     }
 
     void FixedUpdate()
     {
-        playerRigidbody.AddForce(movementInput * movementSpeed);
+        playerRigidbody.velocity = movementInput * movementSpeed;
+
+        if (followCamera != null)
+        {
+            Vector3 position = playerRigidbody.position;
+            float x = Mathf.Clamp(position.x, minCameraBounds.x, maxCameraBounds.x);
+            float y = Mathf.Clamp(position.y, minCameraBounds.y, maxCameraBounds.y);
+            followCamera.transform.position = new Vector3(x, y, followCamera.transform.position.z);
+        }
     }
 
     public void OnInputMove(InputAction.CallbackContext context)
@@ -75,5 +103,6 @@ public class WorldBehaviour : MonoBehaviour
         Assert.IsNotNull(menuDisplayObject);
         Assert.IsNotNull(inventoryDisplayObject);
         Assert.IsNotNull(playerRigidbody);
+        Assert.IsFalse(cameraBounds.Contains(null));
     }
 }
