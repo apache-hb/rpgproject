@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 
-public class WorldBehaviour : MonoBehaviour
+public class PlayerBehaviour : MonoBehaviour
 {
     [SerializeField] private SceneReference mainMenuScene;
     [SerializeField] private SceneReference encounterScene;
