@@ -1,6 +1,7 @@
 using Eflatun.SceneReference;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 public class WorldBehaviour : MonoBehaviour
 {
@@ -17,6 +18,22 @@ public class WorldBehaviour : MonoBehaviour
     private Vector2 movementInput = Vector2.zero;
     private float initialTimeScale = 1f;
 
+    private bool IsInventoryActive => inventoryDisplayObject.activeSelf;
+    private bool IsPauseMenuActive => menuDisplayObject.activeSelf;
+
+    private void PauseGame(bool pause)
+    {
+        if (pause)
+        {
+            initialTimeScale = Time.timeScale;
+            Time.timeScale = 0f;
+        }
+        else
+        {
+            Time.timeScale = initialTimeScale;
+        }
+    }
+
     void Start()
     {
         menuDisplayObject.SetActive(false);
@@ -28,29 +45,27 @@ public class WorldBehaviour : MonoBehaviour
         playerRigidbody.AddForce(movementInput * movementSpeed);
     }
 
-    public void OnMoveInput(Vector2 movement)
+    public void OnInputMove(InputAction.CallbackContext context)
     {
-        movementInput = movement;
+        movementInput = context.ReadValue<Vector2>();
     }
 
-    public void OnInventoryButtonClicked()
+    public void OnInventoryButtonClicked(InputAction.CallbackContext context)
     {
-        bool isInventoryActive = inventoryDisplayObject.activeSelf;
-        inventoryDisplayObject.SetActive(!isInventoryActive);
-        if (!isInventoryActive)
+        if (context.performed)
         {
-            initialTimeScale = Time.timeScale;
-            Time.timeScale = 0f;
-        }
-        else
-        {
-            Time.timeScale = initialTimeScale;
+            inventoryDisplayObject.SetActive(!IsInventoryActive);
+            PauseGame(IsInventoryActive);
         }
     }
 
-    public void OnShowMenuButtonClicked()
+    public void OnShowMenuButtonClicked(InputAction.CallbackContext context)
     {
-        menuDisplayObject.SetActive(true);
+        if (context.performed)
+        {
+            menuDisplayObject.SetActive(!IsPauseMenuActive);
+            PauseGame(IsPauseMenuActive);
+        }
     }
 
     void OnValidate()
