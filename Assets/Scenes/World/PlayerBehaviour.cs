@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AYellowpaper.SerializedCollections;
 using Eflatun.SceneReference;
 using Unity.Mathematics;
 using UnityEngine;
@@ -12,6 +13,9 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private GameObject menuDisplayObject;
     [SerializeField] private GameObject inventoryDisplayObject;
+
+    [SerializedDictionary("Position", "Encounter")]
+    [SerializeField] private SerializedDictionary<Transform, PartyInfo> partyPositions;
 
     [Range(1f, 1000f)]
     [SerializeField] private float movementSpeed = 5f;
