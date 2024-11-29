@@ -8,7 +8,7 @@ public class PartyInfo : ScriptableObject
     [SerializeReference]
     public List<CharacterInfo> characters;
 
-    [SerializeField]
+    [SerializeReference]
     private CharacterInfo primaryCharacter;
 
     public CharacterInfo PrimaryCharacter

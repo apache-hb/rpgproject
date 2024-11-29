@@ -1,6 +1,9 @@
+using System;
+using System.Buffers.Text;
 using System.Collections.Generic;
 using AYellowpaper.SerializedCollections;
 using Eflatun.SceneReference;
+using MessagePack;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -13,6 +16,14 @@ public interface IInteract
 
     void Interact(PlayerBehaviour player);
     void Exit(PlayerBehaviour player);
+}
+
+[Serializable]
+[MessagePackObject(keyAsPropertyName: true)]
+public class WorldState
+{
+    public Inventory inventory;
+    public PartyInfo playerParty;
 }
 
 public class PlayerBehaviour : MonoBehaviour
@@ -236,7 +247,26 @@ public class PlayerBehaviour : MonoBehaviour
         // unity says player prefs arent meant to be used to save game data
         // i dont care, i will be using player prefs to save game data
 
+        WorldState state = new()
+        {
+            inventory = inventoryDisplayObject.Inventory,
+            playerParty = playerPartyInfo
+        };
+
+        PlayerPrefs.SetString("SaveData", Convert.ToBase64String(MessagePackSerializer.Serialize(state)));
         PlayerPrefs.SetInt("HasSave", 1);
+    }
+
+    public void LoadGameFromSave()
+    {
+        if (IsSavedGame)
+        {
+            string saveData = PlayerPrefs.GetString("SaveData");
+            WorldState state = MessagePackSerializer.Deserialize<WorldState>(Convert.FromBase64String(saveData));
+
+            inventoryDisplayObject.Inventory = state.inventory;
+            playerPartyInfo = state.playerParty;
+        }
     }
 
     public void EnterInteractArea(IInteract interactable)

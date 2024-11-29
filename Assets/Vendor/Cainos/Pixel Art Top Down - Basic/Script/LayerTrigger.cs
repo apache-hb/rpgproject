@@ -9,17 +9,18 @@ namespace Cainos.PixelArtTopDown_Basic
     public class LayerTrigger : MonoBehaviour
     {
         public string layer;
-        public string sortingLayer;
+
+        [SerializeField] private SortingLayer sortingLayer;
 
         private void OnTriggerExit2D(Collider2D other)
         {
-            other.gameObject.layer = LayerMask.NameToLayer(layer);
+            other.gameObject.layer = sortingLayer.id;
 
-            other.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = sortingLayer;
+            other.gameObject.GetComponent<SpriteRenderer>().sortingLayerName = sortingLayer.name;
             SpriteRenderer[] srs = other.gameObject.GetComponentsInChildren<SpriteRenderer>();
             foreach ( SpriteRenderer sr in srs)
             {
-                sr.sortingLayerName = sortingLayer;
+                sr.sortingLayerName = sortingLayer.name;
             }
         }
 

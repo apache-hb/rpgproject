@@ -279,7 +279,7 @@ MonoBehaviour:
     _serializedList: []
   movementSpeed: 5
   playerRigidbody: {fileID: 6898047403163622705}
-  followSpeed: 1
+  followSpeed: 1.7
   followCamera: {fileID: 0}
   cameraBounds:
   - {fileID: 672159024163462174}

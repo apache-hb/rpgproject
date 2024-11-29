@@ -17,8 +17,10 @@ public class InventoryBehaviour : MonoBehaviour
     [SerializeField] private List<ItemInfo> items = new();
     private List<GameObject> itemButtons = new();
     private ItemInfo currentItem;
+    private Inventory inventory;
 
     public List<ItemInfo> Items { get => items; set { items = value; BuildItemList(); } }
+    public Inventory Inventory { get => inventory; set { inventory = value; Items = inventory.items; } }
 
     // Start is called before the first frame update
     void Start()

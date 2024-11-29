@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13b4b155132870b469751af9fc4e87a5, type: 3}
   m_Name: PlayerParty
   m_EditorClassIdentifier: 
-  characters: []
+  characters:
+  - {fileID: 11400000, guid: 6666e006e4648404fa6af6a877883cf4, type: 2}
+  primaryCharacter: {fileID: 11400000, guid: 6666e006e4648404fa6af6a877883cf4, type: 2}

@@ -13,5 +13,13 @@ MonoBehaviour:
   m_Name: Player
   m_EditorClassIdentifier: 
   characterName: Player
-  defaultHealth: 0
-  defaultEnergy: 0
+  defaultHealth: 50
+  defaultEnergy: 20
+  defaultMoney: 15
+  currentHealth: 40
+  currentEnergy: 20
+  currentMoney: 10
+  items:
+  - {fileID: 11400000, guid: d1baf1b03dd44b649a6671c62921dde1, type: 2}
+  - {fileID: 11400000, guid: af4b53b32912df243ad6741519c8c0c7, type: 2}
+  - {fileID: 11400000, guid: 05ec3933409c80d4185b3ced192e53c9, type: 2}

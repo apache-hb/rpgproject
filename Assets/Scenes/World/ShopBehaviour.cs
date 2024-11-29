@@ -16,10 +16,9 @@ public class ShopBehaviour : MonoBehaviour, IInteract
     private List<GameObject> shopItemButtons = new();
     private List<GameObject> playerItemButtons = new();
 
-    [SerializeField] private Text itemName;
-    [SerializeField] private Text itemDescription;
-    [SerializeField] private Text itemValue;
-    [SerializeField] private Text itemWeight;
+    [SerializeField] private TextMeshProUGUI itemName;
+    [SerializeField] private TextMeshProUGUI itemValue;
+    [SerializeField] private TextMeshProUGUI itemWeight;
 
     private CharacterInfo player;
 
@@ -102,7 +101,6 @@ public class ShopBehaviour : MonoBehaviour, IInteract
         isCurrentItemOwnedByShop = isShopItem;
 
         itemName.text = item.itemName;
-        itemDescription.text = item.itemDescription;
         itemValue.text = $"Value: {item.itemValue}";
         itemWeight.text = $"Weight: {item.itemWeight}";
     }
