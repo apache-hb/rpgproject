@@ -5,6 +5,7 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerBehaviour : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private GameObject menuDisplayObject;
     [SerializeField] private GameObject inventoryDisplayObject;
+    [SerializeField] private GameObject encounterDisplayObject;
 
     [SerializedDictionary("Position", "Encounter")]
     [SerializeField] private SerializedDictionary<Transform, PartyInfo> partyPositions;
@@ -27,6 +29,11 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private List<Transform> cameraBounds = new();
 
+    [SerializeField] private PartyInfo defaultEnemyPartyInfo;
+    [SerializeField] private PartyInfo defaultPlayerPartyInfo;
+
+    private PartyInfo enemyPartyInfo;
+    private PartyInfo playerPartyInfo;
     private float2 movementInput = float2.zero;
     private float initialTimeScale = 1f;
 
@@ -35,6 +42,10 @@ public class PlayerBehaviour : MonoBehaviour
 
     private bool IsInventoryActive => inventoryDisplayObject.activeSelf;
     private bool IsPauseMenuActive => menuDisplayObject.activeSelf;
+
+    public static PlayerBehaviour Instance { get; private set; }
+
+    private bool IsEncounterActive => enemyPartyInfo != null && playerPartyInfo != null;
 
     private void PauseGame(bool pause)
     {
@@ -49,10 +60,40 @@ public class PlayerBehaviour : MonoBehaviour
         }
     }
 
+    private bool SetGlobalInstance()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            return true;
+        }
+
+        return false;
+    }
+
     void Start()
     {
+        if (!SetGlobalInstance())
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        DontDestroyOnLoad(gameObject);
+
+        if (defaultEnemyPartyInfo != null && enemyPartyInfo == null)
+        {
+            enemyPartyInfo = defaultEnemyPartyInfo;
+        }
+
+        if (defaultPlayerPartyInfo != null && playerPartyInfo == null)
+        {
+            playerPartyInfo = defaultPlayerPartyInfo;
+        }
+
         menuDisplayObject.SetActive(false);
         inventoryDisplayObject.SetActive(false);
+        encounterDisplayObject.SetActive(IsEncounterActive);
 
         minCameraBounds = new float2(float.MaxValue, float.MaxValue);
         maxCameraBounds = new float2(float.MinValue, float.MinValue);
@@ -67,12 +108,12 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Update()
     {
-        if (followCamera != null)
+        if (followCamera != null && !IsEncounterActive)
         {
             float2 position = playerRigidbody.position;
             float x = Mathf.Clamp(position.x, minCameraBounds.x, maxCameraBounds.x);
             float y = Mathf.Clamp(position.y, minCameraBounds.y, maxCameraBounds.y);
-            float3 target = new float3(x, y, followCamera.transform.position.z);
+            float3 target = new(x, y, followCamera.transform.position.z);
             followCamera.transform.position = math.lerp(followCamera.transform.position, target, followSpeed * Time.deltaTime);
         }
     }
@@ -81,7 +122,12 @@ public class PlayerBehaviour : MonoBehaviour
     {
         // using AddForce feels horrible, just set the velocity directly
         playerRigidbody.velocity = movementInput * movementSpeed;
+    }
 
+    public void StartEncounter(PartyInfo partyInfo)
+    {
+        enemyPartyInfo = partyInfo;
+        SceneManager.LoadSceneAsync(encounterScene.BuildIndex);
     }
 
     public void OnInputMove(InputAction.CallbackContext context)
@@ -89,22 +135,66 @@ public class PlayerBehaviour : MonoBehaviour
         movementInput = context.ReadValue<Vector2>();
     }
 
-    public void OnInventoryButtonClicked(InputAction.CallbackContext context)
+    private void ToggleInventory()
     {
-        if (context.performed)
-        {
-            inventoryDisplayObject.SetActive(!IsInventoryActive);
-            PauseGame(IsInventoryActive);
-        }
+        if (IsPauseMenuActive) return;
+
+        inventoryDisplayObject.SetActive(!IsInventoryActive);
+        PauseGame(IsInventoryActive);
     }
 
-    public void OnShowMenuButtonClicked(InputAction.CallbackContext context)
+    private void TogglePauseMenu()
     {
-        if (context.performed)
+        if (IsInventoryActive)
+        {
+            ToggleInventory();
+        }
+        else
         {
             menuDisplayObject.SetActive(!IsPauseMenuActive);
             PauseGame(IsPauseMenuActive);
         }
+    }
+
+    public void OnInventoryAction(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            ToggleInventory();
+        }
+    }
+
+    public void OnInventoryButtonClicked()
+    {
+        ToggleInventory();
+    }
+
+    public void OnShowMenuAction(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            TogglePauseMenu();
+        }
+    }
+
+    public void OnShowMenuButtonClicked()
+    {
+        menuDisplayObject.SetActive(!IsPauseMenuActive);
+        PauseGame(IsPauseMenuActive);
+    }
+
+    public void OnQuitButtonClicked()
+    {
+        SceneManager.LoadSceneAsync(mainMenuScene.BuildIndex);
+        Destroy(gameObject);
+    }
+
+    public void OnSaveButtonClicked()
+    {
+        // unity says player prefs arent meant to be used to save game data
+        // i dont care, i will be using player prefs to save game data
+
+        PlayerPrefs.SetInt("HasSave", 1);
     }
 
     void OnValidate()

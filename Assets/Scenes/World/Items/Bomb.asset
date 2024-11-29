@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88becc40a5063ef4a8044bb0e5142b4f, type: 3}
   m_Name: Bomb
   m_EditorClassIdentifier: 
-  itemName: 
-  itemDescription: 
-  itemWeight: 0
-  itemSprite: {fileID: 0}
-  itemValue: 0
+  itemName: Bomb
+  itemDescription: Explodes
+  itemWeight: 1
+  itemSprite: {fileID: 21300000, guid: 66659c0734260014baa58aee54233cb3, type: 3}
+  itemValue: 2

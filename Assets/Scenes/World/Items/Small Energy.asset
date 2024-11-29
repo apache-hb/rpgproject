@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88becc40a5063ef4a8044bb0e5142b4f, type: 3}
   m_Name: Small Energy
   m_EditorClassIdentifier: 
-  itemName: 
-  itemDescription: 
-  itemWeight: 0
-  itemSprite: {fileID: 0}
-  itemValue: 0
+  itemName: Small energy flask
+  itemDescription: 99% panzerschokolade pervitin garanteed
+  itemWeight: 1
+  itemSprite: {fileID: 21300000, guid: 81de4259e87989149b2f423fcfe64031, type: 3}
+  itemValue: 5
