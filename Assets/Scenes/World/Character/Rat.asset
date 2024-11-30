@@ -15,3 +15,12 @@ MonoBehaviour:
   characterName: 
   defaultHealth: 0
   defaultEnergy: 0
+  defaultMoney: 25
+  currentHealth: 0
+  currentEnergy: 0
+  currentMoney: 10
+  items:
+  - {fileID: 11400000, guid: 5db47ec9c09aaf14fad414d4bbd7b5ad, type: 2}
+  - {fileID: 11400000, guid: a97fe86858694f344874b47846bbcd79, type: 2}
+  - {fileID: 11400000, guid: 0b8fc5f1302804a4c85e887239e81101, type: 2}
+  - {fileID: 11400000, guid: f2f2ea5d42febb148bb6184f84854318, type: 2}

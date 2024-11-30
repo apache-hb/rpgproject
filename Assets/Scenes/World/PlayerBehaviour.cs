@@ -22,8 +22,7 @@ public interface IInteract
 [MessagePackObject(keyAsPropertyName: true)]
 public class WorldState
 {
-    public Inventory inventory;
-    public PartyInfo playerParty;
+    public List<CharacterInfo> characters;
 }
 
 public class PlayerBehaviour : MonoBehaviour
@@ -234,11 +233,12 @@ public class PlayerBehaviour : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public void OnInteractKeyPressed()
+    public void OnInteractKeyPressed(InputAction.CallbackContext context)
     {
-        if (HasInteractable)
+        if (context.performed && HasInteractable)
         {
             currentInteractable.Interact(this);
+            InteractDialogueActive = false;
         }
     }
 
@@ -249,8 +249,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         WorldState state = new()
         {
-            inventory = inventoryDisplayObject.Inventory,
-            playerParty = playerPartyInfo
+            characters = playerPartyInfo.characters
         };
 
         PlayerPrefs.SetString("SaveData", Convert.ToBase64String(MessagePackSerializer.Serialize(state)));
@@ -264,8 +263,7 @@ public class PlayerBehaviour : MonoBehaviour
             string saveData = PlayerPrefs.GetString("SaveData");
             WorldState state = MessagePackSerializer.Deserialize<WorldState>(Convert.FromBase64String(saveData));
 
-            inventoryDisplayObject.Inventory = state.inventory;
-            playerPartyInfo = state.playerParty;
+            playerPartyInfo = new() { characters = state.characters, PrimaryCharacter = state.characters[0] };
         }
     }
 
@@ -274,8 +272,8 @@ public class PlayerBehaviour : MonoBehaviour
         if (HasInteractable) return;
 
         currentInteractable = interactable;
-        interactDialogue.InteractText = interactable.InteractText;
         InteractDialogueActive = true;
+        interactDialogue.InteractText = interactable.InteractText;
     }
 
     public void ExitInteractArea(IInteract interactable)

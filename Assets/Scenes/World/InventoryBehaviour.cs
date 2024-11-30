@@ -14,19 +14,23 @@ public class InventoryBehaviour : MonoBehaviour
     [SerializeField] private TextMeshProUGUI itemWeightLabel;
     [SerializeField] private TextMeshProUGUI itemValueLabel;
 
-    [SerializeField] private List<ItemInfo> items = new();
     private List<GameObject> itemButtons = new();
-    private ItemInfo currentItem;
-    private Inventory inventory;
+    private CharacterInfo inventory;
 
-    public List<ItemInfo> Items { get => items; set { items = value; BuildItemList(); } }
-    public Inventory Inventory { get => inventory; set { inventory = value; Items = inventory.items; } }
+    public List<ItemInfo> Items => Inventory.Items;
+    public CharacterInfo Inventory => PlayerBehaviour.Instance.Character;
 
     // Start is called before the first frame update
     void Start()
     {
         BuildItemList();
-        OnSelectItem(items[0]);
+        OnSelectItem(Items[0]);
+    }
+
+    void Update()
+    {
+        BuildItemList();
+        OnSelectItem(Items[0]);
     }
 
     private void BuildItemList()
@@ -38,7 +42,7 @@ public class InventoryBehaviour : MonoBehaviour
 
         itemButtons.Clear();
 
-        foreach (ItemInfo item in items)
+        foreach (ItemInfo item in Items)
         {
             GameObject itemButton = new();
             itemButton.SetActive(true);
@@ -56,7 +60,6 @@ public class InventoryBehaviour : MonoBehaviour
 
     public void OnSelectItem(ItemInfo item)
     {
-        currentItem = item;
         itemImage.sprite = item.itemSprite;
         itemNameLabel.text = item.itemName;
         itemDescriptionLabel.text = item.itemDescription;

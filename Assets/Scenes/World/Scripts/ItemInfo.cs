@@ -15,25 +15,5 @@ public class ItemInfo : ScriptableObject
     [IgnoreMember]
     public Sprite itemSprite;
 
-    public int itemValue;
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-[CreateAssetMenu(fileName = "Character", menuName = "ScriptableObjects/Character", order = -1)]
-public class Character : ScriptableObject
-{
-    public string Name;
-    public int Experience;
-    public int Health;
-    public int Mana;
-}
-
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class Inventory
-{
-    public int money;
-    public int experience;
-    public List<ItemInfo> items = new();
+    public int itemValue = 1;
 }
