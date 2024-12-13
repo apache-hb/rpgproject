@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &4057512000333995662
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6635731762673102855}
+  - component: {fileID: 6272615553568844264}
+  m_Layer: 0
+  m_Name: WorldManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6635731762673102855
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057512000333995662}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6272615553568844264
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057512000333995662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6de0c26c4cc920e48aa0daea61708ee6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  itemSprites:
+    _serializedList:
+    - Key: 3
+      Value: {fileID: 21300000, guid: 66659c0734260014baa58aee54233cb3, type: 3}
+    - Key: 4
+      Value: {fileID: 1065312467, guid: 3b866b62871f4e84ea88f70ee1e050ce, type: 3}
+    - Key: 7
+      Value: {fileID: -1359379441, guid: 3b866b62871f4e84ea88f70ee1e050ce, type: 3}
+    - Key: 1
+      Value: {fileID: 1065312467, guid: 3b866b62871f4e84ea88f70ee1e050ce, type: 3}
+    - Key: 2
+      Value: {fileID: 1065312467, guid: 3b866b62871f4e84ea88f70ee1e050ce, type: 3}
+  mainMenuScene:
+    asset: {fileID: 102900000, guid: 06bc63089e9b7a74a8f48b9f7a71bc51, type: 3}
+    guid: 06bc63089e9b7a74a8f48b9f7a71bc51
+  encounterScene:
+    asset: {fileID: 102900000, guid: 64f933223eee51244b8df20d795c549f, type: 3}
+    guid: 64f933223eee51244b8df20d795c549f
+  worldScene:
+    asset: {fileID: 102900000, guid: 817d91c9c0cc489439ee08920f42b3f0, type: 3}
+    guid: 817d91c9c0cc489439ee08920f42b3f0

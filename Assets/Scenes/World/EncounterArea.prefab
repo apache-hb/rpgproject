@@ -141,11 +141,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d34963cfa622f644c828d63bd30f5dac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  partyInfo: {fileID: 0}
-  encounterArea: {fileID: 5111715389781021535}
+  encounter: 0
+  area: {fileID: 5111715389781021535}
   minTimeToEncounter: 5
   maxTimeToEncounter: 15
-  rngSeed: 227
+  rngSeed: 84
   rocks:
   - {fileID: 612582882714984259}
   - {fileID: 4185218414701948926}

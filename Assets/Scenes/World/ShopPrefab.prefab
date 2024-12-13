@@ -1798,15 +1798,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5ea74ebca94e60469bd56894e12e16d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shopKeeper: {fileID: 11400000, guid: 1c21e9061ba95bd42abbbe3f28d311b7, type: 2}
+  shopInventory:
+    items: {fileID: 9163624681264267404}
+    image: {fileID: 3916395520031420823}
+    name: {fileID: 924889740241286851}
+    description: {fileID: 0}
+    weight: {fileID: 7348316405544607398}
+    value: {fileID: 184536801003781189}
+  playerInventory:
+    items: {fileID: 7579248231057477616}
+    image: {fileID: 3916395520031420823}
+    name: {fileID: 924889740241286851}
+    description: {fileID: 0}
+    weight: {fileID: 7348316405544607398}
+    value: {fileID: 184536801003781189}
+  shopId: 1
   canvas: {fileID: 1225331382511034165}
-  shopListView: {fileID: 9163624681264267404}
-  playerListView: {fileID: 7579248231057477616}
-  itemName: {fileID: 924889740241286851}
-  itemValue: {fileID: 184536801003781189}
-  itemWeight: {fileID: 7348316405544607398}
-  itemSprite: {fileID: 3916395520031420823}
-  sellButtonText: {fileID: 6346896033407802203}
+  sellText: {fileID: 6346896033407802203}
   shopTitle: {fileID: 8700324221234210222}
   playerTitle: {fileID: 116240566630200843}
 --- !u!50 &8722258684743830645

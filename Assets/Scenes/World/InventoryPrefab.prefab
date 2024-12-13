@@ -45,17 +45,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e788222a6ee873b49b433b448e939b4d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inventory:
+    items: {fileID: 0}
+    image: {fileID: 0}
+    name: {fileID: 0}
+    description: {fileID: 0}
+    weight: {fileID: 0}
+    value: {fileID: 0}
   itemListObject: {fileID: 266789435715141233}
   itemImage: {fileID: 7269911982692288890}
   itemNameLabel: {fileID: 6704881439198570314}
   itemDescriptionLabel: {fileID: 7102444788714687436}
   itemWeightLabel: {fileID: 4610402284071771633}
   itemValueLabel: {fileID: 7357897822555446245}
-  items:
-  - {fileID: 11400000, guid: 5db47ec9c09aaf14fad414d4bbd7b5ad, type: 2}
-  - {fileID: 11400000, guid: 05ec3933409c80d4185b3ced192e53c9, type: 2}
-  - {fileID: 11400000, guid: af4b53b32912df243ad6741519c8c0c7, type: 2}
-  - {fileID: 11400000, guid: 4c0bcde4dbbd3664e939d6494aeb8981, type: 2}
 --- !u!1 &591240842989352324
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,8 +441,8 @@ RectTransform:
   - {fileID: 132704902961176230}
   - {fileID: 4700310845910689139}
   - {fileID: 8268726808861115306}
-  - {fileID: 2321987455153441329}
   - {fileID: 6783385211105514593}
+  - {fileID: 2321987455153441329}
   m_Father: {fileID: 189388031533616742}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

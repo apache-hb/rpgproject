@@ -1,14 +1,9 @@
 using System;
-using System.Buffers.Text;
 using System.Collections.Generic;
-using AYellowpaper.SerializedCollections;
-using Eflatun.SceneReference;
-using MessagePack;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public interface IInteract
 {
@@ -18,25 +13,12 @@ public interface IInteract
     void Exit(PlayerBehaviour player);
 }
 
-[Serializable]
-[MessagePackObject(keyAsPropertyName: true)]
-public class WorldState
-{
-    public List<CharacterInfo> characters;
-}
-
 public class PlayerBehaviour : MonoBehaviour
 {
-    [SerializeField] private SceneReference mainMenuScene;
-    [SerializeField] private SceneReference encounterScene;
-
     [SerializeField] private GameObject menuDisplayObject;
     [SerializeField] private InventoryBehaviour inventoryDisplayObject;
     [SerializeField] private GameObject encounterDisplayObject;
     [SerializeField] private InteractBehaviour interactDialogue;
-
-    [SerializedDictionary("Position", "Encounter")]
-    [SerializeField] private SerializedDictionary<Transform, PartyInfo> partyPositions;
 
     [Range(1f, 1000f)]
     [SerializeField] private float movementSpeed = 5f;
@@ -48,13 +30,8 @@ public class PlayerBehaviour : MonoBehaviour
 
     [SerializeField] private List<Transform> cameraBounds = new();
 
-    [SerializeField] private PartyInfo defaultEnemyPartyInfo;
-    [SerializeField] private PartyInfo defaultPlayerPartyInfo;
+    public GameState.Character Character => WorldManager.PlayerCharacter;
 
-    public CharacterInfo Character => playerPartyInfo.PrimaryCharacter;
-
-    private PartyInfo enemyPartyInfo;
-    private PartyInfo playerPartyInfo;
     private float2 movementInput = float2.zero;
     private float initialTimeScale = 1f;
 
@@ -64,7 +41,6 @@ public class PlayerBehaviour : MonoBehaviour
     private IInteract currentInteractable;
 
     public bool HasInteractable => currentInteractable != null;
-    public bool IsSavedGame => PlayerPrefs.GetInt("HasSave", 0) == 1;
 
     public bool InventoryActive
     {
@@ -86,7 +62,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public static PlayerBehaviour Instance { get; private set; }
 
-    private bool IsEncounterDataValid => enemyPartyInfo != null && playerPartyInfo != null;
+    private bool IsEncounterDataValid => false;
 
     private void PauseGame(bool pause)
     {
@@ -122,16 +98,6 @@ public class PlayerBehaviour : MonoBehaviour
 
         DontDestroyOnLoad(gameObject);
 
-        if (defaultEnemyPartyInfo != null && enemyPartyInfo == null)
-        {
-            enemyPartyInfo = defaultEnemyPartyInfo;
-        }
-
-        if (defaultPlayerPartyInfo != null && playerPartyInfo == null)
-        {
-            playerPartyInfo = defaultPlayerPartyInfo;
-        }
-
         encounterDisplayObject.SetActive(IsEncounterDataValid);
 
         PauseMenuActive = false;
@@ -151,6 +117,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     void Update()
     {
+        WorldManager.PlayerPosition = transform.position;
         if (followCamera != null && !IsEncounterDataValid)
         {
             float2 position = playerRigidbody.position;
@@ -167,10 +134,9 @@ public class PlayerBehaviour : MonoBehaviour
         playerRigidbody.velocity = movementInput * movementSpeed;
     }
 
-    public void StartEncounter(PartyInfo partyInfo)
+    public void StartEncounter(GameState.EncounterId id)
     {
-        enemyPartyInfo = partyInfo;
-        SceneManager.LoadSceneAsync(encounterScene.BuildIndex);
+        WorldManager.LoadEncounter();
     }
 
     public void OnInputMove(InputAction.CallbackContext context)
@@ -229,7 +195,7 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void OnQuitButtonClicked()
     {
-        SceneManager.LoadSceneAsync(mainMenuScene.BuildIndex);
+        WorldManager.LoadMainMenu();
         Destroy(gameObject);
     }
 
@@ -244,27 +210,13 @@ public class PlayerBehaviour : MonoBehaviour
 
     public void OnSaveButtonClicked()
     {
-        // unity says player prefs arent meant to be used to save game data
-        // i dont care, i will be using player prefs to save game data
-
-        WorldState state = new()
-        {
-            characters = playerPartyInfo.characters
-        };
-
-        PlayerPrefs.SetString("SaveData", Convert.ToBase64String(MessagePackSerializer.Serialize(state)));
-        PlayerPrefs.SetInt("HasSave", 1);
+        WorldManager.SaveGame();
     }
 
     public void LoadGameFromSave()
     {
-        if (IsSavedGame)
-        {
-            string saveData = PlayerPrefs.GetString("SaveData");
-            WorldState state = MessagePackSerializer.Deserialize<WorldState>(Convert.FromBase64String(saveData));
-
-            playerPartyInfo = new() { characters = state.characters, PrimaryCharacter = state.characters[0] };
-        }
+        WorldManager.LoadGame();
+        transform.position = WorldManager.PlayerPosition;
     }
 
     public void EnterInteractArea(IInteract interactable)
@@ -287,8 +239,6 @@ public class PlayerBehaviour : MonoBehaviour
 
     void OnValidate()
     {
-        Assert.IsNotNull(mainMenuScene);
-        Assert.IsNotNull(encounterScene);
         Assert.IsNotNull(menuDisplayObject);
         Assert.IsNotNull(inventoryDisplayObject);
         Assert.IsNotNull(playerRigidbody);

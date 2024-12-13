@@ -6,27 +6,20 @@ using UnityEngine.UI;
 
 public class ShopBehaviour : MonoBehaviour, IInteract
 {
-    [SerializeField] private CharacterInfo shopKeeper;
+    [SerializeField] private InventoryDisplay shopInventory;
+    [SerializeField] private InventoryDisplay playerInventory;
+    [SerializeField] private GameState.ShopId shopId;
 
     [SerializeField] private GameObject canvas;
 
-    [SerializeField] private VerticalLayoutGroup shopListView;
-    [SerializeField] private VerticalLayoutGroup playerListView;
-
-    private List<GameObject> shopItemButtons = new();
-    private List<GameObject> playerItemButtons = new();
-
-    [SerializeField] private TextMeshProUGUI itemName;
-    [SerializeField] private TextMeshProUGUI itemValue;
-    [SerializeField] private TextMeshProUGUI itemWeight;
-    [SerializeField] private Image itemSprite;
-    [SerializeField] private TextMeshProUGUI sellButtonText;
+    [SerializeField] private TextMeshProUGUI sellText;
     [SerializeField] private TextMeshProUGUI shopTitle;
     [SerializeField] private TextMeshProUGUI playerTitle;
 
-    private CharacterInfo Character => PlayerBehaviour.Instance.Character;
+    public GameState.Character Character => WorldManager.PlayerCharacter;
+    public GameState.Character ShopKeeper => WorldManager.Shops[shopId];
 
-    private ItemInfo currentItem;
+    private GameState.Item selectedItem;
     private bool isCurrentItemOwnedByShop;
 
     public bool IsActive
@@ -41,8 +34,7 @@ public class ShopBehaviour : MonoBehaviour, IInteract
     {
         IsActive = true;
 
-        BuildItemList(shopKeeper.Items, shopItemButtons, shopListView, true);
-        BuildItemList(Character.Items, playerItemButtons, playerListView, false);
+        UpdateShopDisplay();
     }
 
     public void Exit(PlayerBehaviour player)
@@ -52,61 +44,36 @@ public class ShopBehaviour : MonoBehaviour, IInteract
 
     void Start()
     {
+        shopInventory.OnItemClick += (item) => OnSelectItem(item, true);
+        playerInventory.OnItemClick += (item) => OnSelectItem(item, false);
+
+        Debug.Log($"Shopkeeper: {shopId} {ShopKeeper == null}");
+        shopInventory.Character = ShopKeeper;
+        playerInventory.Character = Character;
+
         IsActive = false;
-    }
-
-    private void BuildItemList(List<ItemInfo> items, List<GameObject> objects, VerticalLayoutGroup list, bool isShop)
-    {
-        foreach (GameObject button in objects)
-        {
-            button.transform.SetParent(null);
-            Destroy(button);
-        }
-
-        objects.Clear();
-
-        foreach (ItemInfo item in items)
-        {
-            // unity loves inserting phantom data into the list
-            if (item.itemName.Length == 0) continue;
-
-            GameObject itemButton = new(item.itemName);
-            itemButton.SetActive(true);
-            Button button = itemButton.AddComponent<Button>();
-            button.onClick.AddListener(() => OnSelectItem(item, isShop));
-            TextMeshProUGUI tmp = itemButton.AddComponent<TextMeshProUGUI>();
-            tmp.text = item.itemName;
-            tmp.alignment = TextAlignmentOptions.Left;
-            tmp.GetComponent<RectTransform>().sizeDelta = new Vector2(500, 50);
-
-            objects.Add(itemButton);
-            itemButton.transform.SetParent(list.transform);
-        }
     }
 
     public void OnTransactButton()
     {
-        if (currentItem == null) return;
+        if (selectedItem == null) return;
 
         if (isCurrentItemOwnedByShop)
         {
-            if (Character.CanAfford(currentItem))
+            if (Character.CanAfford(selectedItem))
             {
-                Character.Buy(currentItem, from: shopKeeper);
+                Character.Buy(selectedItem, from: ShopKeeper);
             }
         }
         else
         {
-            if (shopKeeper.CanAfford(currentItem))
+            if (ShopKeeper.CanAfford(selectedItem))
             {
-                shopKeeper.Buy(currentItem, from: Character);
+                ShopKeeper.Buy(selectedItem, from: Character);
             }
         }
 
-        shopTitle.text = $"Shop ({shopKeeper.currentMoney})";
-        playerTitle.text = $"Player ({Character.currentMoney})";
-        BuildItemList(Character.Items, playerItemButtons, playerListView, false);
-        BuildItemList(shopKeeper.Items, shopItemButtons, shopListView, true);
+        UpdateShopDisplay();
     }
 
     public void OnCloseButton()
@@ -115,45 +82,42 @@ public class ShopBehaviour : MonoBehaviour, IInteract
         IsActive = false;
     }
 
-    private void OnSelectItem(ItemInfo item, bool isShopItem)
+    private void OnSelectItem(GameState.Item item, bool isShopItem)
     {
-        currentItem = item;
+        selectedItem = item;
         isCurrentItemOwnedByShop = isShopItem;
         if (isCurrentItemOwnedByShop)
         {
-            sellButtonText.text = "Buy";
+            sellText.text = "Buy";
         }
         else
         {
-            sellButtonText.text = "Sell";
+            sellText.text = "Sell";
         }
+    }
 
-        itemName.text = item.itemName;
-        itemSprite.sprite = item.itemSprite;
-        itemValue.text = $"Value: {item.itemValue}";
-        itemWeight.text = $"Weight: {item.itemWeight}";
+    private void UpdateShopDisplay()
+    {
+        shopTitle.text = $"Shop ({ShopKeeper.money})";
+        playerTitle.text = $"Player ({Character.money})";
+
+        shopInventory.Character = ShopKeeper;
+        playerInventory.Character = Character;
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        Debug.Log($"Triggered by {other.name}");
         PlayerBehaviour player = other.GetComponentInParent<PlayerBehaviour>();
         if (player != null)
         {
-            Debug.Log($"Player entered");
             player.EnterInteractArea(this);
-            playerTitle.text = $"Player ({Character.currentMoney})";
-            shopTitle.text = $"Shop ({shopKeeper.currentMoney})";
-        }
-        else
-        {
-            Debug.Log($"Not a player");
+            playerTitle.text = $"Player ({Character.money})";
+            shopTitle.text = $"Shop ({ShopKeeper.money})";
         }
     }
 
     void OnTriggerExit2D(Collider2D other)
     {
-        Debug.Log($"Exited by {other.name}");
         PlayerBehaviour player = other.GetComponentInParent<PlayerBehaviour>();
         if (player != null)
         {

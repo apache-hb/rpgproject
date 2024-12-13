@@ -7,8 +7,8 @@ using Random = Unity.Mathematics.Random;
 
 public class EncounterAreaBehaviour : MonoBehaviour
 {
-    [SerializeField] private PartyInfo partyInfo;
-    [SerializeField] private BoxCollider2D encounterArea;
+    [SerializeField] private GameState.EncounterId encounter;
+    [SerializeField] private BoxCollider2D area;
 
     [SerializeField] private float minTimeToEncounter = 5f;
     [SerializeField] private float maxTimeToEncounter = 15f;
@@ -23,8 +23,8 @@ public class EncounterAreaBehaviour : MonoBehaviour
     private float timeToEncounter;
     private PlayerBehaviour player;
 
-    private float2 MinBounds => new float3(encounterArea.bounds.min).xy;
-    private float2 MaxBounds => new float3(encounterArea.bounds.max).xy;
+    private float2 MinBounds => new float3(area.bounds.min).xy;
+    private float2 MaxBounds => new float3(area.bounds.max).xy;
 
     void SetupFoliage()
     {
@@ -58,7 +58,7 @@ public class EncounterAreaBehaviour : MonoBehaviour
             if (timeToEncounter <= 0f)
             {
                 timeToEncounter = rng.NextFloat(minTimeToEncounter, maxTimeToEncounter);
-                player.StartEncounter(partyInfo);
+                player.StartEncounter(encounter);
             }
         }
     }
