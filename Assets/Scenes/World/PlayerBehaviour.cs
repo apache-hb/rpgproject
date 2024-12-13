@@ -131,7 +131,7 @@ public class PlayerBehaviour : MonoBehaviour
     void FixedUpdate()
     {
         // using AddForce feels horrible, just set the velocity directly
-        playerRigidbody.velocity = movementInput * movementSpeed;
+        playerRigidbody.linearVelocity = movementInput * movementSpeed;
     }
 
     public void StartEncounter(GameState.EncounterId id)

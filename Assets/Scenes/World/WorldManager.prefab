@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6635731762673102855}
   - component: {fileID: 6272615553568844264}
+  - component: {fileID: 6002892670168761893}
   m_Layer: 0
   m_Name: WorldManager
   m_TagString: Untagged
@@ -65,3 +66,85 @@ MonoBehaviour:
   worldScene:
     asset: {fileID: 102900000, guid: 817d91c9c0cc489439ee08920f42b3f0, type: 3}
     guid: 817d91c9c0cc489439ee08920f42b3f0
+--- !u!114 &6002892670168761893
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4057512000333995662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23953d3cc6573c745b3dc7bc5720c369, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  DisplayTime: 3
+  NumberOnScreen: 3
+  ShowExactProgress: 0
+  DisplayAchievements: 1
+  StackLocation: 3
+  AutoSave: 1
+  SpoilerAchievementMessage: Hidden
+  AchievedSound: {fileID: 8300000, guid: 3400fb2a60564af4db6cc1c28c188006, type: 3}
+  ProgressMadeSound: {fileID: 8300000, guid: 9492b32862561624aa75d621f48074c5, type: 3}
+  States:
+  - Progress: 0
+    LastProgressUpdate: 0
+    Achieved: 0
+  - Progress: 0
+    LastProgressUpdate: 0
+    Achieved: 0
+  - Progress: 0
+    LastProgressUpdate: 0
+    Achieved: 0
+  - Progress: 0
+    LastProgressUpdate: 0
+    Achieved: 0
+  AchievementList:
+  - Key: OpenShop
+    DisplayName: Open Shop Menu
+    Description: 
+    LockedIcon: {fileID: -4581056451314084308, guid: d1d9466cce4d3944e89adb19420bf6b0, type: 3}
+    LockOverlay: 0
+    AchievedIcon: {fileID: -2399370432353335595, guid: fb35b9e1ec57e204283aa9b226eda3a7, type: 3}
+    Spoiler: 0
+    Progression: 0
+    ProgressGoal: 0
+    NotificationFrequency: 0
+    ProgressSuffix: 
+  - Key: CollectMoney
+    DisplayName: Collect Gold
+    Description: 
+    LockedIcon: {fileID: 4433316196561257331, guid: 3fa4d2000cdfdeb4aa4af57122e32290, type: 3}
+    LockOverlay: 0
+    AchievedIcon: {fileID: -9130864850822391544, guid: dfd262477821b994286390ee6c1fa980, type: 3}
+    Spoiler: 0
+    Progression: 0
+    ProgressGoal: 0
+    NotificationFrequency: 0
+    ProgressSuffix: 
+  - Key: SaveGame
+    DisplayName: Save the game
+    Description: 
+    LockedIcon: {fileID: -104692440782075178, guid: 7cd321e9a1d5aba42a22da389ff9f63a, type: 3}
+    LockOverlay: 0
+    AchievedIcon: {fileID: -7265031717449152675, guid: 7eda1b94623be4c48ba149c2e5c64611, type: 3}
+    Spoiler: 0
+    Progression: 0
+    ProgressGoal: 0
+    NotificationFrequency: 0
+    ProgressSuffix: 
+  - Key: LoadGame
+    DisplayName: Load the game
+    Description: 
+    LockedIcon: {fileID: -5412910156287300836, guid: e45a7add01eb3454f989a92aeab1859e, type: 3}
+    LockOverlay: 0
+    AchievedIcon: {fileID: -5412910156287300836, guid: e45a7add01eb3454f989a92aeab1859e, type: 3}
+    Spoiler: 0
+    Progression: 0
+    ProgressGoal: 0
+    NotificationFrequency: 0
+    ProgressSuffix: 
+  UseFinalAchievement: 1
+  FinalAchievementKey: Unlock_Final
+  Stack: {fileID: 0}
